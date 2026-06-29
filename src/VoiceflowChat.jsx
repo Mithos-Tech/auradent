@@ -4,19 +4,27 @@ export default function VoiceflowChat() {
   useEffect(() => {
     const script = document.createElement('script');
     script.type = 'text/javascript';
-    script.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs";
+    script.src = "https://voiceflow.com";
     
     script.onload = () => {
       window.voiceflow.chat.load({
         verify: { projectID: '6a3c37233ad95c98616a50c7' },
-        url: 'https://general-runtime.voiceflow.com',
+        url: 'https://voiceflow.com',
         voice: {
-          url: "https://runtime-api.voiceflow.com"
+          url: "https://voiceflow.com"
+        },
+        // 👇 CONFIGURACIÓN DE AJUSTE RESPONSIVO PREMIUM 👇
+        appearance: {
+          mobile: {
+            config: {
+              // Obliga al chat a abrirse en pantalla completa en celulares para que sea ultra cómodo
+              fullscreen: true 
+            }
+          }
         }
       });
     };
 
-    // Buscamos el primer script de la página para inyectarlo al lado
     const firstScript = document.getElementsByTagName('script')[0];
     if (firstScript && firstScript.parentNode) {
       firstScript.parentNode.insertBefore(script, firstScript);
@@ -24,7 +32,6 @@ export default function VoiceflowChat() {
       document.body.appendChild(script);
     }
 
-    // Limpieza al desmontar el componente por seguridad de React
     return () => {
       if (script.parentNode) {
         script.parentNode.removeChild(script);
@@ -32,6 +39,7 @@ export default function VoiceflowChat() {
     };
   }, []);
 
-  return null; // No dibuja nada en HTML, solo inyecta el widget de fondo
+  return null;
 }
+
 
