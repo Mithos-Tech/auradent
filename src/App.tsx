@@ -8,8 +8,6 @@ export default function App() {
       {/* Agente de IA Premium */}
       <VoiceflowChat />
 
-      {/* Premium Header */}
-      <Navbar />
 
       {/* Main Content Layout */}
       <main className="flex-1">
