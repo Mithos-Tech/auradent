@@ -1,6 +1,5 @@
 import React from 'react';
 import VoiceflowChat from './VoiceflowChat';
-import Navbar from './components/Navbar';
 import LandingPage from './components/LandingPage';
 
 export default function App() {
