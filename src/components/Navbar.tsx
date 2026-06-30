@@ -45,33 +45,33 @@ export default function Navbar() {
   return (
     <div className="fixed top-6 left-0 right-0 z-50 pointer-events-none flex justify-center px-4 sm:px-6">
       <motion.header
-        initial={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, y: -30, scale: 0.95 }}
         animate={{ 
-          opacity: isAtHero ? 1 : 0, 
-          y: isAtHero ? 0 : -30,
-          scale: isAtHero ? 1 : 0.95
+          opacity: isAtHero ? 0 : 1, 
+          y: isAtHero ? -30 : 0,
+          scale: isAtHero ? 0.95 : 1
         }}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className={`pointer-events-auto w-full max-w-4xl bg-[#EBECF2]/85 backdrop-blur-lg border border-white/50 rounded-full shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300 ${
+        className={`pointer-events-auto w-full max-w-4xl bg-[#EBF0FE]/85 backdrop-blur-lg border border-white/50 rounded-full shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300 ${
           isOpen ? 'rounded-[2rem]' : 'rounded-full'
-        }`}
+        } ${isAtHero ? 'pointer-events-none' : ''}`}
       >
         <div className="px-6 h-16 flex items-center justify-between">
           {/* Left: Brand Logo & Typography */}
           <div className="flex items-center gap-2.5">
             <motion.div
-              className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-sm cursor-pointer shrink-0"
+              className="w-9 h-9 rounded-full bg-[#0B0A0A] flex items-center justify-center text-white shadow-sm cursor-pointer shrink-0"
               whileHover={{ scale: 1.05, rotate: 5 }}
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             >
-              <Sparkles className="w-4.5 h-4.5 text-white" />
+              <Sparkles className="w-4.5 h-4.5 text-[#246AFE]" />
             </motion.div>
             <div className="flex flex-col text-left">
-              <span className="font-display font-extrabold text-base leading-none tracking-tight text-slate-950">
-                AuraDent
+              <span className="font-display font-black text-base leading-none tracking-tight text-[#0B0A0A]">
+                Varenne
               </span>
-              <span className="text-[9px] uppercase text-indigo-700 font-sans tracking-widest font-extrabold">
-                Premium
+              <span className="text-[9px] uppercase text-[#246AFE] font-sans tracking-widest font-extrabold">
+                Élite
               </span>
             </div>
           </div>
@@ -83,7 +83,7 @@ export default function Navbar() {
                 key={item.name}
                 href={item.href}
                 onClick={(e) => handleScrollToSection(e, item.href)}
-                className="text-xs font-bold uppercase tracking-wider text-slate-700 hover:text-indigo-600 transition-colors relative py-1 px-2.5"
+                className="text-xs font-bold uppercase tracking-wider text-[#0B0A0A]/70 hover:text-[#246AFE] transition-colors relative py-1 px-2.5"
               >
                 {item.name}
               </a>
@@ -95,7 +95,7 @@ export default function Navbar() {
             <a
               href="#contacto"
               onClick={(e) => handleScrollToSection(e, '#contacto')}
-              className="px-5 py-2 rounded-full bg-slate-950 hover:bg-indigo-600 text-white font-bold tracking-wider uppercase text-[11px] transition-all duration-300 shadow-sm"
+              className="px-5 py-2 rounded-full bg-[#0B0A0A] hover:bg-[#246AFE] text-white font-bold tracking-wider uppercase text-[11px] transition-all duration-300 shadow-sm"
             >
               Contacto
             </a>
@@ -105,7 +105,7 @@ export default function Navbar() {
           <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-full text-slate-700 hover:text-slate-950 hover:bg-white/40 transition-colors focus:outline-none"
+              className="p-2 rounded-full text-[#0B0A0A]/70 hover:text-[#0B0A0A] hover:bg-white/40 transition-colors focus:outline-none"
             >
               {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -120,7 +120,7 @@ export default function Navbar() {
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.25 }}
-              className="md:hidden overflow-hidden bg-[#EBECF2]/95 rounded-b-[2rem] border-t border-white/20"
+              className="md:hidden overflow-hidden bg-[#EBF0FE]/95 rounded-b-[2rem] border-t border-white/20"
             >
               <div className="px-6 pt-2 pb-6 space-y-3 text-left">
                 {navItems.map((item) => (
@@ -128,7 +128,7 @@ export default function Navbar() {
                     key={item.name}
                     href={item.href}
                     onClick={(e) => handleScrollToSection(e, item.href)}
-                    className="block px-4 py-2 rounded-full text-sm font-semibold text-slate-700 hover:text-indigo-600 hover:bg-white/50 transition-all"
+                    className="block px-4 py-2 rounded-full text-sm font-semibold text-[#0B0A0A]/70 hover:text-[#246AFE] hover:bg-white/50 transition-all"
                   >
                     {item.name}
                   </a>
@@ -137,7 +137,7 @@ export default function Navbar() {
                   <a
                     href="#contacto"
                     onClick={(e) => handleScrollToSection(e, '#contacto')}
-                    className="block w-full text-center px-6 py-3 rounded-full bg-slate-950 hover:bg-indigo-600 text-white font-bold tracking-wider uppercase text-xs transition-all shadow"
+                    className="block w-full text-center px-6 py-3 rounded-full bg-[#0B0A0A] hover:bg-[#246AFE] text-white font-bold tracking-wider uppercase text-xs transition-all shadow"
                   >
                     Contacto
                   </a>

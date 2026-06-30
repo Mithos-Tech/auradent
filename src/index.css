@@ -1,38 +1,42 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Onest:wght@100..900&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Plus Jakarta Sans", sans-serif;
+  --font-sans: "Onest", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Onest", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
+  
+  --color-brand-bg: #EBF0FE;
+  --color-brand-text: #0B0A0A;
+  --color-brand-accent: #246AFE;
 }
 
 @layer utilities {
   /* Premium Glassmorphism & Framer style glows */
   .glass-card {
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.75);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.5);
   }
   
   .glass-card-dark {
-    background: rgba(15, 23, 42, 0.85);
+    background: rgba(11, 10, 10, 0.9);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .glow-purple {
-    box-shadow: 0 0 30px 2px rgba(139, 92, 246, 0.15);
+    box-shadow: 0 0 30px 2px rgba(36, 106, 254, 0.15);
   }
 
   .glow-blue {
-    box-shadow: 0 0 30px 2px rgba(59, 130, 246, 0.15);
+    box-shadow: 0 0 30px 2px rgba(36, 106, 254, 0.18);
   }
   
   .border-gradient {
-    border-image: linear-gradient(to right, #3b82f6, #818cf8) 1;
+    border-image: linear-gradient(to right, #246AFE, #0B0A0A) 1;
   }
 }
 
@@ -40,6 +44,19 @@
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
+}
+
+/* Highlight style rules */
+.text-gradient {
+  background: linear-gradient(135deg, #246AFE 0%, #0B0A0A 80%, #246AFE 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-dark {
+  background: linear-gradient(135deg, #246AFE 0%, #ffffff 80%, #246AFE 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 ::-webkit-scrollbar-track {

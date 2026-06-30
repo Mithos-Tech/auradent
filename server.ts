@@ -104,22 +104,69 @@ function generateLocalFallback(messages: any[]): string {
     return `Excelente, ${nombre}. Ya registré tu celular (${telefono}). 🗓️ Ahora dime, ¿qué tratamiento o molestia dental te gustaría que revisáramos en tu cita de valoración? (Ej: Ortodoncia, Limpieza, Carillas, Implantes, o Urgencia) 🦷✨`;
   }
 
-  // All 3 gathered! Stop and output correct technical format
-  return `PROCESANDO_REGISTRO: {"nombre": "${nombre}", "telefono": "${telefono}", "tratamiento": "${tratamiento}"}\nPerfecto, tus datos han sido enviados al sistema de AuraDent. Un asesor humano se comunicará contigo por este medio en unos minutos para confirmar tu horario de atención. ¡Que tengas un excelente día! 🦷✨`;
+  // All 3 gathered! Stop and output correct technical format safely serialized to prevent JSON/String Injection
+  const serializedRecord = JSON.stringify({ nombre, telefono, tratamiento });
+  return `PROCESANDO_REGISTRO: ${serializedRecord}\nPerfecto, tus datos han sido enviados al sistema de AuraDent. Un asesor humano se comunicará contigo por este medio en unos minutos para confirmar tu horario de atención. ¡Que tengas un excelente día! 🦷✨`;
 }
+
+// In-memory Rate Limiting Store for security and DDoS/Quota protection
+interface RateLimitEntry {
+  count: number;
+  resetTime: number;
+}
+const rateLimitStore = new Map<string, RateLimitEntry>();
+const WINDOW_MS = 60 * 1000; // 1 minute window
+const MAX_REQUESTS = 30; // Max 30 requests per minute
 
 async function startServer() {
   const app = express();
   const PORT = 3000;
 
-  app.use(express.json());
+  // Add Security Headers to protect client context (MIME sniffing, Frame injection/Clickjacking, XSS)
+  app.use((req, res, next) => {
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("X-Frame-Options", "SAMEORIGIN");
+    res.setHeader("X-XSS-Protection", "1; mode=block");
+    next();
+  });
+
+  // Strict limit on payload size to prevent body buffer abuse
+  app.use(express.json({ limit: "50kb" }));
 
   // API route for Aura Assistant
   app.post("/api/chat", async (req, res) => {
+    // 1. IP Rate Limiting implementation
+    const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress || "anonymous";
+    const ipKey = Array.isArray(ip) ? ip[0] : ip;
+    const now = Date.now();
+    const entry = rateLimitStore.get(ipKey);
+
+    if (!entry || now > entry.resetTime) {
+      rateLimitStore.set(ipKey, { count: 1, resetTime: now + WINDOW_MS });
+    } else {
+      entry.count++;
+      if (entry.count > MAX_REQUESTS) {
+        return res.status(429).json({
+          error: "Demasiadas solicitudes. Por favor, inténtalo de nuevo en un minuto."
+        });
+      }
+    }
+
     try {
       const { messages } = req.body;
       if (!Array.isArray(messages)) {
         return res.status(400).json({ error: "messages array is required" });
+      }
+
+      // 2. Strict Input Validation to prevent Resource Exhaustion & Prompt Overload
+      if (messages.length > 40) {
+        return res.status(400).json({ error: "Historial de conversación demasiado largo." });
+      }
+
+      for (const msg of messages) {
+        if (!msg || typeof msg.text !== "string" || msg.text.length > 600) {
+          return res.status(400).json({ error: "La longitud del mensaje excede el límite seguro." });
+        }
       }
 
       const apiKey = process.env.GEMINI_API_KEY;
